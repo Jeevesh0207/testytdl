@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Stream Downloader</title>
+</head>
+<body>
+  <h1>Video Stream Downloader</h1>
+
+  <form id="download-form">
+    <label for="video-url">Video URL:</label>
+    <input type="text" id="video-url" placeholder="Enter video URL" required>
+
+    <label for="resolution">Resolution:</label>
+    <select id="resolution" required>
+      <option value="360p">360p</option>
+      <option value="480p">480p</option>
+      <option value="720p">720p</option>
+      <option value="1080p">1080p</option>
+      <option value="1080p">2160p</option>
+    </select>
+
+    <button type="submit">Download</button>
+  </form>
+
+  <video id="video-player" controls style="display: none; width: 100%; max-width: 600px;"></video>
+
+  <script>
+    document.getElementById('download-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const videoUrl = document.getElementById('video-url').value;
+      const resolution = document.getElementById('resolution').value;
+
+      try {
+        const response = await fetch('http://localhost:4000/fetch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ link:videoUrl, resolution }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch video: ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        // Show video in player
+        const videoPlayer = document.getElementById('video-player');
+        videoPlayer.src = url;
+        videoPlayer.style.display = 'block';
+        videoPlayer.play();
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    });
+  </script>
+</body>
+</html>
