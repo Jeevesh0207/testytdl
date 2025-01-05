@@ -156,7 +156,7 @@ const mergeAndStream = (
         '-map', '1:a',
         '-crf', '23',
         '-c:v', 'copy',
-        '-c:a', 'mp2',
+        '-c:a', 'aac',
         '-b:a', '192k',
         '-ar', '44100',
         '-preset', 'ultrafast',
