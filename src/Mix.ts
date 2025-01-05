@@ -66,44 +66,83 @@ const mergeAndStream = (
   //   }
   // );
 
+  // const ffmpegProcess = cp.spawn(
+  //   ffmpegStatic,
+  //   [
+  //     "-hide_banner", // Suppress banner for cleaner output
+  //     "-thread_queue_size",
+  //     "4096", // Increase buffer for input streams
+  //     "-i",
+  //     "pipe:3", // Video input from stdin (pipe 3)
+  //     "-i",
+  //     "pipe:4", // Audio input from stdin (pipe 4)
+  //     "-t",
+  //     duration, // Limit the duration of the output
+  //     "-map",
+  //     "0:v", // Map video stream
+  //     "-map",
+  //     "1:a", // Map audio stream
+  //     "-c:v",
+  //     "libx264", // Re-encode video to H.264 (QuickTime compatible)
+  //     "-c:a",
+  //     "aac", // Encode audio to AAC
+  //     "-b:a",
+  //     audioBitrate, // Set audio bitrate (256k)
+  //     "-ar",
+  //     "44100", // Set audio sample rate
+  //     "-preset",
+  //     "fast", // Encoding preset for better compression
+  //     "-movflags",
+  //     "frag_keyframe+empty_moov+faststart", // Fragmented MP4 for streaming
+  //     "-f",
+  //     "mp4", // Output format: MP4
+  //     "pipe:1", // Output to stdout (pipe 1)
+  //   ],
+  //   {
+  //     windowsHide: true,
+  //     stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"], // Manage stdio for pipes
+  //   }
+  // );
+
   const ffmpegProcess = cp.spawn(
     ffmpegStatic,
     [
-      "-hide_banner", // Suppress banner for cleaner output
+      "-hide_banner",
       "-thread_queue_size",
-      "4096", // Increase buffer for input streams
+      "8192", // Larger buffer for input streams
       "-i",
-      "pipe:3", // Video input from stdin (pipe 3)
+      "pipe:3", // Video input
       "-i",
-      "pipe:4", // Audio input from stdin (pipe 4)
+      "pipe:4", // Audio input
       "-t",
-      duration, // Limit the duration of the output
+      duration, // Set duration
       "-map",
-      "0:v", // Map video stream
+      "0:v", // Map video
       "-map",
-      "1:a", // Map audio stream
+      "1:a", // Map audio
       "-c:v",
-      "libx264", // Re-encode video to H.264 (QuickTime compatible)
-      "-c:a",
-      "aac", // Encode audio to AAC
-      "-b:a",
-      audioBitrate, // Set audio bitrate (256k)
-      "-ar",
-      "44100", // Set audio sample rate
+      "libx264", // H.264 codec
       "-preset",
-      "fast", // Encoding preset for better compression
+      "ultrafast", // Speed-optimized preset
+      "-c:a",
+      "aac", // AAC audio
+      "-b:a",
+      audioBitrate,
+      "-ar",
+      "44100",
       "-movflags",
-      "frag_keyframe+empty_moov+faststart", // Fragmented MP4 for streaming
+      "frag_keyframe+empty_moov+faststart",
+      "-threads",
+      "4", // Explicitly set threads
       "-f",
-      "mp4", // Output format: MP4
-      "pipe:1", // Output to stdout (pipe 1)
+      "mp4", // MP4 output
+      "pipe:1", // Output to stdout
     ],
     {
       windowsHide: true,
-      stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"], // Manage stdio for pipes
+      stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
     }
   );
-  
 
   const videoInput = ffmpegProcess.stdio[3] as Writable;
   const audioInput = ffmpegProcess.stdio[4] as Writable;
