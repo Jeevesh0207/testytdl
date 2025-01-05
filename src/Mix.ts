@@ -104,45 +104,70 @@ const mergeAndStream = (
   //   }
   // );
 
+  // const ffmpegProcess = cp.spawn(
+  //   ffmpegStatic,
+  //   [
+  //     "-hide_banner",
+  //     "-thread_queue_size",
+  //     "8192", // Larger buffer for input streams
+  //     "-i",
+  //     "pipe:3", // Video input
+  //     "-i",
+  //     "pipe:4", // Audio input
+  //     "-t",
+  //     duration, // Set duration
+  //     "-map",
+  //     "0:v", // Map video
+  //     "-map",
+  //     "1:a", // Map audio
+  //     "-c:v",
+  //     "libx264", // H.264 codec
+  //     "-preset",
+  //     "ultrafast", // Speed-optimized preset
+  //     "-c:a",
+  //     "aac", // AAC audio
+  //     "-b:a",
+  //     audioBitrate,
+  //     "-ar",
+  //     "44100",
+  //     "-movflags",
+  //     "frag_keyframe+empty_moov+faststart",
+  //     "-threads",
+  //     "4", // Explicitly set threads
+  //     "-f",
+  //     "mp4", // MP4 output
+  //     "pipe:1", // Output to stdout
+  //   ],
+  //   {
+  //     windowsHide: true,
+  //     stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
+  //   }
+  // );
+
+
   const ffmpegProcess = cp.spawn(
     ffmpegStatic,
     [
-      "-hide_banner",
-      "-thread_queue_size",
-      "8192", // Larger buffer for input streams
-      "-i",
-      "pipe:3", // Video input
-      "-i",
-      "pipe:4", // Audio input
-      "-t",
-      duration, // Set duration
-      "-map",
-      "0:v", // Map video
-      "-map",
-      "1:a", // Map audio
-      "-c:v",
-      "libx264", // H.264 codec
-      "-preset",
-      "ultrafast", // Speed-optimized preset
-      "-c:a",
-      "aac", // AAC audio
-      "-b:a",
-      audioBitrate,
-      "-ar",
-      "44100",
-      "-movflags",
-      "frag_keyframe+empty_moov+faststart",
-      "-threads",
-      "4", // Explicitly set threads
-      "-f",
-      "mp4", // MP4 output
-      "pipe:1", // Output to stdout
+        '-hide_banner',
+        '-i', 'pipe:3',
+        '-i', 'pipe:4',
+        '-t', duration,
+        '-map', '0:v',
+        '-map', '1:a',
+        '-crf', '23',
+        '-c:v', 'copy',
+        '-c:a', 'mp2',
+        '-b:a', '192k',
+        '-ar', '44100',
+        '-preset', 'ultrafast',
+        '-f', 'matroska',
+        'pipe:1',
     ],
     {
-      windowsHide: true,
-      stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
-    }
-  );
+        windowsHide: true,
+        stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
+    },
+);
 
   const videoInput = ffmpegProcess.stdio[3] as Writable;
   const audioInput = ffmpegProcess.stdio[4] as Writable;
