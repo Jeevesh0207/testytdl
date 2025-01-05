@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { fetchAudioVideoStreams } from "./fetchData";
 import mergeAndStream from "./Mix";
-import { agent } from "../cookie/cookie";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -28,7 +27,7 @@ app.post("/fetch", async (req: Request, res: Response) => {
 
   try {
     // Fetch video and audio streams
-    const response = await fetchAudioVideoStreams(link, resolution, agent);
+    const response = await fetchAudioVideoStreams(link, resolution);
 
     // Set headers for streaming video
     res.setHeader("Content-Type", "video/mp4");
