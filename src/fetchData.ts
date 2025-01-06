@@ -6,7 +6,6 @@ export const fetchAudioVideoStreams = async (
   link: string,
   resolution: string
 ) => {
-  console.log(agent);
   try {
     // Fetch video details including the duration
     const info = await ytdl.getInfo(link, { agent });
