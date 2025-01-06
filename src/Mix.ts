@@ -25,46 +25,46 @@ const mergeAndStream = (
     videoQuality = "ultrafast",
   } = options;
 
-  // const ffmpegProcess = cp.spawn(
-  //   ffmpegStatic,
-  //   [
-  //     "-hide_banner", // Suppress banner for cleaner output
-  //     "-thread_queue_size",
-  //     "4096", // Increase buffer for input streams
-  //     "-i",
-  //     "pipe:3", // Video input from stdin (pipe 3)
-  //     "-i",
-  //     "pipe:4", // Audio input from stdin (pipe 4)
-  //     "-t",
-  //     duration, // Limit the duration of the output
-  //     "-map",
-  //     "0:v", // Map video stream
-  //     "-map",
-  //     "1:a", // Map audio stream
-  //     "-c:v",
-  //     "copy", // Copy video codec (no re-encoding)
-  //     "-c:a",
-  //     "aac", // Encode audio to AAC
-  //     "-b:a",
-  //     audioBitrate, // Set audio bitrate
-  //     "-ar",
-  //     "44100", // Set audio sample rate
-  //     "-preset",
-  //     videoQuality, // Set encoding preset
-  //     // "-f",
-  //     // "matroska", // Output format: Matroska (stream-friendly)
-  //     "-movflags",
-  //     "frag_keyframe+empty_moov+faststart", // Fragmented MP4 for streaming
-  //     "-f",
-  //     "mp4", // Output format: MP4
+  const ffmpegProcess = cp.spawn(
+    ffmpegStatic,
+    [
+      "-hide_banner", // Suppress banner for cleaner output
+      "-thread_queue_size",
+      "4096", // Increase buffer for input streams
+      "-i",
+      "pipe:3", // Video input from stdin (pipe 3)
+      "-i",
+      "pipe:4", // Audio input from stdin (pipe 4)
+      "-t",
+      duration, // Limit the duration of the output
+      "-map",
+      "0:v", // Map video stream
+      "-map",
+      "1:a", // Map audio stream
+      "-c:v",
+      "copy", // Copy video codec (no re-encoding)
+      "-c:a",
+      "aac", // Encode audio to AAC
+      "-b:a",
+      audioBitrate, // Set audio bitrate
+      "-ar",
+      "44100", // Set audio sample rate
+      "-preset",
+      videoQuality, // Set encoding preset
+      "-f",
+      "matroska", // Output format: Matroska (stream-friendly)
+      // "-movflags",
+      // "frag_keyframe+empty_moov+faststart", // Fragmented MP4 for streaming
+      // "-f",
+      // "mp4", // Output format: MP4
 
-  //     "pipe:1", // Output to stdout (pipe 1)
-  //   ],
-  //   {
-  //     windowsHide: true,
-  //     stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"], // Manage stdio for pipes
-  //   }
-  // );
+      "pipe:1", // Output to stdout (pipe 1)
+    ],
+    {
+      windowsHide: true,
+      stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"], // Manage stdio for pipes
+    }
+  );
 
   // const ffmpegProcess = cp.spawn(
   //   ffmpegStatic,
@@ -144,30 +144,29 @@ const mergeAndStream = (
   //   }
   // );
 
-
-  const ffmpegProcess = cp.spawn(
-    ffmpegStatic,
-    [
-        '-hide_banner',
-        '-i', 'pipe:3',
-        '-i', 'pipe:4',
-        '-t', duration,
-        '-map', '0:v',
-        '-map', '1:a',
-        '-crf', '23',
-        '-c:v', 'copy',
-        '-c:a', 'aac',
-        '-b:a', '192k',
-        '-ar', '44100',
-        '-preset', 'ultrafast',
-        '-f', 'matroska',
-        'pipe:1',
-    ],
-    {
-        windowsHide: true,
-        stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
-    },
-);
+  //   const ffmpegProcess = cp.spawn(
+  //     ffmpegStatic,
+  //     [
+  //         '-hide_banner',
+  //         '-i', 'pipe:3',
+  //         '-i', 'pipe:4',
+  //         '-t', duration,
+  //         '-map', '0:v',
+  //         '-map', '1:a',
+  //         '-crf', '23',
+  //         '-c:v', 'copy',
+  //         '-c:a', 'aac',
+  //         '-b:a', '192k',
+  //         '-ar', '44100',
+  //         '-preset', 'ultrafast',
+  //         '-f', 'matroska',
+  //         'pipe:1',
+  //     ],
+  //     {
+  //         windowsHide: true,
+  //         stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
+  //     },
+  // );
 
   const videoInput = ffmpegProcess.stdio[3] as Writable;
   const audioInput = ffmpegProcess.stdio[4] as Writable;
