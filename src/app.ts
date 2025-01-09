@@ -21,7 +21,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/fetch", async (req: Request, res: Response) => {
-  const { link, resolution } = req.body;
+  const { link, resolution} = req.body;
 
   console.log(`Fetching video: ${link}, Resolution: ${resolution}`);
 

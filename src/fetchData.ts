@@ -9,16 +9,16 @@ export const fetchAudioVideoStreams = async (
   try {
     // Fetch video details including the duration
     const info = await ytdl.getInfo(link, { agent });
-    const duration = info.videoDetails.lengthSeconds; // Duration in seconds
+    const duration = info.videoDetails.lengthSeconds;
     const title = info.videoDetails.title;
 
     // Filter for video streams based on resolution
     const videoStream = ytdl(link, {
       agent, // Optional agent for network requests
       filter: (format) =>
-        format.qualityLabel === resolution && // Match the resolution
-        format.hasVideo &&
-        !format.hasAudio, // Ensure it's video-only
+        // format.qualityLabel === resolution && // Match the resolution
+        format.itag === 315 && 
+        format.hasVideo && !format.hasAudio, // Ensure it's video-only
     });
 
     // Filter for audio streams based on audio quality
@@ -29,6 +29,8 @@ export const fetchAudioVideoStreams = async (
         format.hasAudio &&
         !format.hasVideo, // Ensure it's audio-only
     });
+
+    console.log(videoStream)
 
     return { videoStream, audioStream, duration, title };
   } catch (error) {
