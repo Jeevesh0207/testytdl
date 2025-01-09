@@ -65,20 +65,64 @@ const mergeAndStream = (
   //   }
   // );
 
+  //   const ffmpegProcess = cp.spawn(
+  //     ffmpegStatic,
+  //     [
+  //       "-hide_banner",
+  //       "-threads",
+  //       "0", // Use all available CPU threads
+  //       "-thread_queue_size",
+  //       "4096", // Increased buffer size
+  //       "-i",
+  //       "pipe:3", // Video input
+  //       "-i",
+  //       "pipe:4", // Audio input
+  //       "-t",
+  //       duration,
+  //       "-map",
+  //       "0:v",
+  //       "-map",
+  //       "1:a",
+  //       "-c:v",
+  //       "libx264",
+  //       "-c:a",
+  //       "aac",
+  //       "-b:a",
+  //       audioBitrate,
+  //       "-ar",
+  //       "44100",
+  //       "-preset",
+  //       "ultrafast", // Fastest encoding
+  //       "-tune",
+  //       "fastdecode", // Optimize for fast decoding
+  //       "-maxrate",
+  //       "5000k", // Limit bitrate for more stable downloading
+  //       "-bufsize",
+  //       "10000k", // Buffer size for rate control
+  //       "-f",
+  //       "matroska", // Use MKV format for better streaming
+  //       "pipe:1",
+  //     ],
+  //     {
+  //       windowsHide: true,
+  //       stdio: ["pipe", "pipe", "pipe", "pipe", "pipe"],
+  //     }
+  //   );
+
   const ffmpegProcess = cp.spawn(
     ffmpegStatic,
     [
       "-hide_banner",
       "-threads",
-      "0", // Use all available CPU threads
+      "1", // Limit to 1 CPU thread
       "-thread_queue_size",
-      "4096", // Increased buffer size
+      "512", // Smaller buffer size
       "-i",
       "pipe:3", // Video input
       "-i",
       "pipe:4", // Audio input
       "-t",
-      duration,
+      duration, // Limit duration
       "-map",
       "0:v",
       "-map",
@@ -88,17 +132,17 @@ const mergeAndStream = (
       "-c:a",
       "aac",
       "-b:a",
-      audioBitrate,
+      "64k", // Lower audio bitrate
       "-ar",
-      "44100",
+      "22050", // Lower audio sample rate
       "-preset",
-      "ultrafast", // Fastest encoding
+      "veryfast", // Balanced speed and efficiency
       "-tune",
       "fastdecode", // Optimize for fast decoding
       "-maxrate",
-      "5000k", // Limit bitrate for more stable downloading
+      "2500k", // Reduced bitrate
       "-bufsize",
-      "10000k", // Buffer size for rate control
+      "4000k", // Smaller buffer for rate control
       "-f",
       "matroska", // Use MKV format for better streaming
       "pipe:1",
